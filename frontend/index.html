@@ -5,9 +5,37 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoopSaving DApp</title>
+    
+    <!-- Preload and polyfill for better compatibility -->
+    <script>
+      // Fix for global object
+      window.global = window;
+      window.process = { env: {} };
+    </script>
+    
+    <!-- Load polyfills for Node.js modules -->
+    <script src="https://cdn.jsdelivr.net/npm/buffer@6.0.3/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stream-browserify@3.0.0/index.js"></script>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Use relative path for module -->
+    <script type="module">
+      // Fix module loading
+      import('./src/main.jsx').catch(console.error);
+    </script>
+    
+    <!-- Fallback script -->
+    <script>
+      if (typeof window !== 'undefined') {
+        window.addEventListener('load', function() {
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = './src/main.jsx';
+          document.body.appendChild(script);
+        });
+      }
+    </script>
   </body>
 </html>
